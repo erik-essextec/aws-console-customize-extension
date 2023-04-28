@@ -14,9 +14,8 @@ $(function() {
     var name = nameElm.text();
 
     // probably not ideal, but it works
-    var acctElm = $("#menu--account > div.globalNav-0335 > div > div:nth-child(1) > span:nth-child(2)");
+    var acctElm = $("#menu--account > div.globalNav-0334 > div > div:nth-child(1) > span:nth-child(2)");
     var acct = acctElm.text().replaceAll('-', '');
-    var acct = acctElm.text();
     
     var regions = location.search.match(/region=(.*?)(&|$)/);
     var region = "";
