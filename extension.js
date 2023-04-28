@@ -6,17 +6,11 @@ $(function() {
     // get username, account number, region
 
     var nameElm = $("#nav-usernameMenu span:first span:first");
-    //var nameElm = $(".ThRjn7o-KwO0459UzmvoU.w8Kxy2XztOAkWobGpdJLt span:first");
-    if (nameElm.length == 0) {
-        // old layout
-        nameElm = $("#nav-usernameMenu");
-    }
     var name = nameElm.text();
 
-    // probably not ideal, but it works
-    var acctElm = $("#menu--account > div.globalNav-0334 > div > div:nth-child(1) > span:nth-child(2)");
-    var acct = acctElm.text().replaceAll('-', '');
-    
+    var nameElmTitle = nameElm[0].title.split(' @ ')
+    var acct = nameElmTitle[nameElmTitle.length-1].replaceAll('-', '')
+
     var regions = location.search.match(/region=(.*?)(&|$)/);
     var region = "";
     if (regions != null && regions.length > 1) {
@@ -24,33 +18,21 @@ $(function() {
     }
 
     // show/hide label
-    $('#consoleNavHeader').hover( 
+    $('#consoleNavHeader').hover(
             () => $('#ruleLabel').css('visibility', 'hidden'),
             () => $('#ruleLabel').css('visibility', '')
     );
 
     // load setting.
     chrome.storage.sync.get(['awsconsole'], function(ruleList) {
-        ruleList.awsconsole.some(rule => { 
-            var re = new RegExp(rule.user);
-            if (rule.enableRule && (re.test(name) || re.test(acct))) {
+        ruleList.awsconsole.some(rule => {
+          if (rule.enableRule && (rule.user == acct)) {
                 if (region == rule.region || "all-region" == rule.region) {
                     // apply rule.
 
-                    // for old layout
-                    $('#nav-menubar').css('background-color', rule.color);
-                    $('.nav-menu').css('background-color', rule.color);
-                    $('#nav-menu-right').css('background-color', rule.color);
-                    $('#console-nav-footer').css('background-color', rule.color);
-
-                    // for new layout
-                    $('#awsc-nav-header').css('background-color', rule.color);
+                    $('#awsc-nav-header > nav').css('background-color', rule.color);
                     $('#console-nav-footer-inner').css('background-color', rule.color);
 
-                    // update layout
-                    //$('.globalNav-0324').css('background-color', rule.color);
-                    $('header > nav').css('background-color', rule.color);
-                    
                     if (rule.showLabel && rule.label != null && rule.label.length > 0) {
                         $('body').prepend('<span id="ruleLabel">' + rule.label + '</span>');
                     }
